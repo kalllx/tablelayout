@@ -27,7 +27,7 @@ public class SwingToolkit extends Toolkit<Component, Table, TableLayout> {
 
 	static SwingToolkit instance = new SwingToolkit();
 	static Timer timer;
-	static ArrayList<TableLayout> debugLayouts = new ArrayList(0);
+	public static ArrayList<TableLayout> debugLayouts = new ArrayList(0);
 
 	public Table newTable (Table parent) {
 		return new Table();

@@ -119,6 +119,7 @@ abstract public class BaseTableLayout<C, T extends C, L extends BaseTableLayout,
 
 	/** Parses a table description and adds the widgets and cells to the table. */
 	public void parse (String tableDescription) {
+	    System.out.println(tableDescription);
 		TableLayoutParser.parse(this, tableDescription);
 	}
 

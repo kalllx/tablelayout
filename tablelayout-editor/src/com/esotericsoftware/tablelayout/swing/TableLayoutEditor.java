@@ -1,11 +1,26 @@
 
 package com.esotericsoftware.tablelayout.swing;
 
+
+import static com.esotericsoftware.tablelayout.swing.TableLayoutTokenizer.BRACKET;
+import static com.esotericsoftware.tablelayout.swing.TableLayoutTokenizer.CONSTANT;
+import static com.esotericsoftware.tablelayout.swing.TableLayoutTokenizer.KEYWORD;
+import static com.esotericsoftware.tablelayout.swing.TableLayoutTokenizer.NAME;
+import static com.esotericsoftware.tablelayout.swing.TableLayoutTokenizer.PLAIN;
+import static com.esotericsoftware.tablelayout.swing.TableLayoutTokenizer.PROPERTY;
+import static com.esotericsoftware.tablelayout.swing.TableLayoutTokenizer.STRING;
+import static com.esotericsoftware.tablelayout.swing.TableLayoutTokenizer.STRUCTURE;
+import static com.esotericsoftware.tablelayout.swing.TableLayoutTokenizer.SYMBOL;
+import static com.esotericsoftware.tablelayout.swing.TableLayoutTokenizer.VALUE;
+import static com.esotericsoftware.tablelayout.swing.TableLayoutTokenizer.WHITESPACE;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,8 +46,7 @@ import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import com.esotericsoftware.tablelayout.ParseException;
-
-import static com.esotericsoftware.tablelayout.swing.TableLayoutTokenizer.*;
+import com.esotericsoftware.tablelayout.swing.util.FileUtil;
 
 // BOZO - Save last markup.
 // BOZO - Support paste/copy of Java strings.
@@ -131,15 +145,28 @@ public class TableLayoutEditor extends JFrame {
 		layout.register("codeScroll", codeScroll);
 		layout.register("outputTable", outputTable);
 		layout.parse("padding:10 " //
-			+ "[JSplitPane] expand fill ( setResizeWeight:0.4 background:white"//
+			+ "[JSplitPane] expand fill colspan:2 ( setResizeWeight:0.4 background:white"//
 			+ "{" //
 			+ "[codeScroll] min:300,0 expand fill" //
 			+ "---" //
 			+ "[JScrollPane] min:300,100 fill ([errorText:JTextArea])" //
 			+ "}" //
 			+ "[outputTable]" //
-			+ ")");
-
+			+ ") ---[generateBtn:JButton] width:200 (text:'generate')[pathTxt:JTextField] fillX expandX");
+		
+		JButton generateBtn = (JButton)layout.getWidget("generateBtn");
+		final JTextField pathTxt =(JTextField)layout.getWidget("pathTxt");
+		generateBtn.addActionListener(new ActionListener()
+		{
+		    
+		    @Override
+		    public void actionPerformed(ActionEvent e)
+		    {
+		
+			FileUtil.writeData(codeText.getText(), pathTxt.getText());
+			
+		    }
+		});
 		errorText = (JTextArea)layout.getWidget("errorText");
 		errorText.setFont(Font.decode("monospaced"));
 		errorText.setWrapStyleWord(true);
